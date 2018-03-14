@@ -5,7 +5,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/external-apis/goxpp"
+	"github.com/frase-io/external-apis/goxpp"
 	"github.com/stretchr/testify/assert"
 )
 

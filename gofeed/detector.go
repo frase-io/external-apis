@@ -4,8 +4,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/external-apis/gofeed/internal/shared"
-	"github.com/external-apis/goxpp"
+	"github.com/frase-io/external-apis/gofeed/internal/shared"
+	"github.com/frase-io/external-apis/goxpp"
 )
 
 // FeedType represents one of the possible feed
