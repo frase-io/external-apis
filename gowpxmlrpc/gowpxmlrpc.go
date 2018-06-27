@@ -36,8 +36,9 @@ func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories 
 }
 
 type Author struct {
-	Id   string
-	Name string
+	Id   	 string
+	Name 	 string
+	UserName string
 }
 
 func GetAuthors(ba *BlogAccount, options map[string]interface{}) (authors []*Author) {
@@ -53,6 +54,7 @@ func GetAuthors(ba *BlogAccount, options map[string]interface{}) (authors []*Aut
 			author := &Author{}
 			author.Id = param.(map[string]interface{})["user_id"].(string)
 			author.Name = param.(map[string]interface{})["display_name"].(string)
+			author.UserName = param.(map[string]interface{})["username"].(string)
 			authors = append(authors, author)
 		}
 	}
