@@ -1,7 +1,7 @@
 package wordpress
 
 import (
-	"github.com/sunfjun/go-xmlrpc"
+	"github.com/carthics/go-xmlrpc"
 )
 
 type BlogAccount struct {
@@ -118,10 +118,14 @@ type File struct {
 
 func UploadFile(ba *BlogAccount, options map[string]interface{}) (f *File) {
 	response := xmlrpc.Request(ba.Url, "wp.uploadFile", ba.BlogId, ba.UserName, ba.PassWord, options)
+	
 	for _, params := range response {
 		if params == nil {
 			return f
 		}
+
+		f = params.(*File)
+		
 	}
 	return f
 }
