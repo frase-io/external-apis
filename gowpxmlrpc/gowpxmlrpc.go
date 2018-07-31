@@ -116,16 +116,16 @@ type File struct {
 	Url      string
 }
 
-func UploadFile(ba *BlogAccount, options map[string]interface{}) (f *File) {
+func UploadFile(ba *BlogAccount, options map[string]interface{}) (id string) {
 	response := xmlrpc.Request(ba.Url, "wp.uploadFile", ba.BlogId, ba.UserName, ba.PassWord, options["data"])
 	
 	for _, params := range response {
 		if params == nil {
-			return f
+			return id
 		}
 
-		f = params.(*File)
+		id = params.(map[string]interface{})["id"].(string)
 		
 	}
-	return f
+	return id
 }
