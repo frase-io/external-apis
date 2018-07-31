@@ -2,6 +2,7 @@ package wordpress
 
 import (
 	"github.com/carthics/go-xmlrpc"
+	"fmt"
 )
 
 type BlogAccount struct {
@@ -124,6 +125,7 @@ func UploadFile(ba *BlogAccount, options map[string]interface{}) (id string) {
 			return id
 		}
 
+		fmt.Println(params)
 		id = params.(map[string]interface{})["id"].(string)
 		
 	}
