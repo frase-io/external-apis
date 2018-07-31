@@ -117,7 +117,7 @@ type File struct {
 }
 
 func UploadFile(ba *BlogAccount, options map[string]interface{}) (f *File) {
-	response := xmlrpc.Request(ba.Url, "wp.uploadFile", ba.BlogId, ba.UserName, ba.PassWord, options)
+	response := xmlrpc.Request(ba.Url, "wp.uploadFile", ba.BlogId, ba.UserName, ba.PassWord, options["data"])
 	
 	for _, params := range response {
 		if params == nil {
