@@ -3,6 +3,8 @@ package wordpress
 import (
 	"github.com/carthics/go-xmlrpc"
 	"fmt"
+	"strconv"
+	"reflect"
 )
 
 type BlogAccount struct {
@@ -27,7 +29,14 @@ func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories 
 		}
 		for _, param := range params.([]interface{}) {
 			cat := &Category{}
-			categoryId := param.(map[string]interface{})["categoryId"].(int)
+			v := param.(map[string]interface{})["categoryId"]
+			var categoryId int
+			if reflect.ValueOf(v).Kind() == reflect.String{
+				abc := param.(map[string]interface{})["categoryId"].(string)
+				categoryId,_ = strconv.Atoi(abc)
+			}else{
+				categoryId = param.(map[string]interface{})["categoryId"].(int)
+			}			
 			cat.Id = categoryId
 			cat.Name = param.(map[string]interface{})["categoryName"].(string)
 			categories = append(categories, cat)
