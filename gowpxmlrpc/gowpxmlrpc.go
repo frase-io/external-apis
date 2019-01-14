@@ -149,7 +149,7 @@ type Post struct {
 	PostAuthor  string		`json: post_author, omit_empty`
 }
 
-func getPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Post){
+func GetPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Post){
 	response := xmlrpc.Request(ba.Url, "wp.getPosts", ba.BlogId, ba.UserName, ba.PassWord, options)
 	
 	for _, params := range response {
