@@ -147,6 +147,7 @@ type Post struct {
 	PostDate 	time.Time 	`json: post_title, omit_empty`
 	PostStatus  string		`json: post_status, omit_empty`
 	PostAuthor  string		`json: post_author, omit_empty`
+	PostLink    string		`json: post_link, omit_empty`
 }
 
 func GetPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Post){
@@ -164,6 +165,7 @@ func GetPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Po
 			eachPost.PostDate = param.(map[string]interface{})["post_date"].(time.Time)
 			eachPost.PostStatus = param.(map[string]interface{})["post_status"].(string)
 			eachPost.PostAuthor = param.(map[string]interface{})["post_author"].(string)
+			eachPost.PostLink = param.(map[string]interface{})["post_link"].(string)
 			listOfPosts = append(listOfPosts, eachPost)
 		}
 	}
