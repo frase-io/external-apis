@@ -3,8 +3,9 @@ package wordpress
 import (
 	"github.com/carthics/go-xmlrpc"
 	"fmt"
-	"strconv"
 	"reflect"
+	"strconv"
+	"time"
 )
 
 type BlogAccount struct {
@@ -139,4 +140,33 @@ func UploadFile(ba *BlogAccount, options map[string]interface{}) (id string) {
 		
 	}
 	return id
+}
+
+type Post struct {
+	PostTitle 	string 		`json: post_title, omit_empty`
+	PostDate 	time.Time 	`json: post_title, omit_empty`
+	PostStatus  string		`json: post_status, omit_empty`
+	PostAuthor  string		`json: post_author, omit_empty`
+}
+
+func getPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Post){
+	response := xmlrpc.Request(ba.Url, "wp.getPosts", ba.BlogId, ba.UserName, ba.PassWord, options)
+	
+	for _, params := range response {
+		
+		if params == nil {
+			return listOfPosts
+		}
+
+		for _, param := range params.([]interface{}) {
+			eachPost := Post{}
+			eachPost.PostTitle = param.(map[string]interface{})["post_title"].(string)
+			eachPost.PostDate = param.(map[string]interface{})["post_date"].(time.Time)
+			eachPost.PostStatus = param.(map[string]interface{})["post_status"].(string)
+			eachPost.PostAuthor = param.(map[string]interface{})["post_author"].(string)
+			listOfPosts = append(listOfPosts, eachPost)
+		}
+	}
+
+	return listOfPosts
 }
