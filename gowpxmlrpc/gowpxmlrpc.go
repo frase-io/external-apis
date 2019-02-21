@@ -21,12 +21,17 @@ type Category struct {
 	Name string
 }
 
-func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories []*Category) {
-	response := xmlrpc.Request(ba.Url, "wp.getCategories", ba.BlogId, ba.UserName, ba.PassWord, options)
+func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories []*Category, err error) {
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.getCategories", ba.BlogId, ba.UserName, ba.PassWord, options)
+
+	if err != nil {
+		return categories, err
+	}
 	
 	for _, params := range response {
 		if params == nil {
-			return categories
+			return categories, err
 		}
 		for _, param := range params.([]interface{}) {
 			cat := &Category{}
@@ -43,7 +48,7 @@ func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories 
 			categories = append(categories, cat)
 		}
 	}
-	return categories
+	return categories, nil
 }
 
 type Author struct {
@@ -52,14 +57,20 @@ type Author struct {
 	UserLogin string
 }
 
-func GetAuthors(ba *BlogAccount, options map[string]interface{}) (authors []*Author) {
-	response := xmlrpc.Request(ba.Url, "wp.getAuthors", ba.BlogId, ba.UserName, ba.PassWord, options)
+func GetAuthors(ba *BlogAccount, options map[string]interface{}) (authors []*Author, err error) {
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.getAuthors", ba.BlogId, ba.UserName, ba.PassWord, options)
+	
+	if err != nil {
+		return authors, err
+	}
+	
 	if response == nil {
-		return authors
+		return authors, err
 	}
 	for _, params := range response {
 		if params == nil {
-			return authors
+			return authors, err
 		}
 		for _, param := range params.([]interface{}) {
 			author := &Author{}
@@ -69,7 +80,7 @@ func GetAuthors(ba *BlogAccount, options map[string]interface{}) (authors []*Aut
 			authors = append(authors, author)
 		}
 	}
-	return authors
+	return authors, nil
 }
 
 type Tag struct {
@@ -77,11 +88,17 @@ type Tag struct {
 	Name string
 }
 
-func GetTags(ba *BlogAccount, options map[string]interface{}) (tags []*Tag) {
-	response := xmlrpc.Request(ba.Url, "wp.getTags", ba.BlogId, ba.UserName, ba.PassWord, options)
+func GetTags(ba *BlogAccount, options map[string]interface{}) (tags []*Tag, err error) {
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.getTags", ba.BlogId, ba.UserName, ba.PassWord, options)
+
+	if err != nil {
+		return tags, err
+	}
+
 	for _, params := range response {
 		if params == nil {
-			return tags
+			return tags, err
 		}
 		for _, param := range params.([]interface{}) {
 			tag := &Tag{}
@@ -90,36 +107,52 @@ func GetTags(ba *BlogAccount, options map[string]interface{}) (tags []*Tag) {
 			tags = append(tags, tag)
 		}
 	}
-	return tags
+	return tags, nil
 }
 
-func NewPost(ba *BlogAccount, options map[string]interface{}) (id string) {
-	response := xmlrpc.Request(ba.Url, "wp.newPost", ba.BlogId, ba.UserName, ba.PassWord, options)
+func NewPost(ba *BlogAccount, options map[string]interface{}) (id string, err error) {
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.newPost", ba.BlogId, ba.UserName, ba.PassWord, options)
+
+	if err != nil {
+		return id, err
+	}
+
 	for _, params := range response {
 		if params == nil {
-			return id
+			return id, err
 		}
 		id = params.(string)
 	}
-	return id
+	return id, nil
 }
 
-func EditPost(ba *BlogAccount, options map[string]interface{}) (isPostModified bool) {	
-	response := xmlrpc.Request(ba.Url, "wp.editPost", ba.BlogId, ba.UserName, ba.PassWord, ba.PostId, options)
+func EditPost(ba *BlogAccount, options map[string]interface{}) (isPostModified bool, err error) {	
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.editPost", ba.BlogId, ba.UserName, ba.PassWord, ba.PostId, options)
+
+	if err != nil {
+		return isPostModified, err
+	}
 	
 	for _, params := range response {
 		isPostModified = params.(bool)
 	}
-	return isPostModified
+	return isPostModified, nil
 }
 
-func DeletePost(ba *BlogAccount, options map[string]interface{}) (isPostDeleted bool) {	
-	response := xmlrpc.Request(ba.Url, "wp.deletePost", ba.BlogId, ba.UserName, ba.PassWord, ba.PostId, options)
+func DeletePost(ba *BlogAccount, options map[string]interface{}) (isPostDeleted bool, err error) {	
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.deletePost", ba.BlogId, ba.UserName, ba.PassWord, ba.PostId, options)
+
+	if err != nil {
+		return isPostDeleted, err
+	}
 	
 	for _, params := range response {
 		isPostDeleted = params.(bool)
 	}
-	return isPostDeleted
+	return isPostDeleted, nil
 }
 
 type File struct {
@@ -127,19 +160,24 @@ type File struct {
 	Url      string
 }
 
-func UploadFile(ba *BlogAccount, options map[string]interface{}) (id string) {
-	response := xmlrpc.Request(ba.Url, "wp.uploadFile", ba.BlogId, ba.UserName, ba.PassWord, options["data"])
+func UploadFile(ba *BlogAccount, options map[string]interface{}) (id string, err error) {
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.uploadFile", ba.BlogId, ba.UserName, ba.PassWord, options["data"])
+
+	if err != nil {
+		return id, err
+	}
 	
 	for _, params := range response {
 		if params == nil {
-			return id
+			return id, err
 		}
 
 		fmt.Println(params)
 		id = params.(map[string]interface{})["id"].(string)
 		
 	}
-	return id
+	return id, nil
 }
 
 type Post struct {
@@ -150,13 +188,18 @@ type Post struct {
 	Link    	string		`json: link, omit_empty`
 }
 
-func GetPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Post){
-	response := xmlrpc.Request(ba.Url, "wp.getPosts", ba.BlogId, ba.UserName, ba.PassWord, options)
+func GetPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Post, err error){
+	response := make([]interface{}, 0)
+	response, err = xmlrpc.Request(ba.Url, "wp.getPosts", ba.BlogId, ba.UserName, ba.PassWord, options)
+
+	if err != nil {
+		return listOfPosts, err
+	}
 	
 	for _, params := range response {
 		
 		if params == nil {
-			return listOfPosts
+			return listOfPosts, err
 		}
 
 		for _, param := range params.([]interface{}) {
@@ -170,5 +213,5 @@ func GetPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Po
 		}
 	}
 
-	return listOfPosts
+	return listOfPosts, nil
 }
