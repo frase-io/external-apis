@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 	urlPkg "net/url"
 )
 
@@ -31,7 +32,13 @@ func DiffbotServer(server, method, token, url string, opt *Options) (body []byte
 	if opt != nil && opt.CustomHeader != nil {
 		req.Header = opt.CustomHeader
 	}
-	resp, err := http.DefaultClient.Do(req)
+
+	timeout := time.Duration(60 * time.Second)
+	client := &http.Client{
+		Timeout:   timeout,
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return
 	}
