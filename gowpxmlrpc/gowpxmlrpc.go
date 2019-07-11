@@ -204,6 +204,9 @@ func GetPosts(ba *BlogAccount, options map[string]interface{}) (listOfPosts []Po
 
 		for _, param := range params.([]interface{}) {
 			eachPost := Post{}
+			if param.(map[string]interface{})["post_title"] == nil || param.(map[string]interface{})["post_date"] == nil || param.(map[string]interface{})["post_status"] == nil || param.(map[string]interface{})["post_author"] == nil || param.(map[string]interface{})["link"] == nil {
+				continue
+			}
 			eachPost.PostTitle = param.(map[string]interface{})["post_title"].(string)
 			eachPost.PostDate = param.(map[string]interface{})["post_date"].(time.Time)
 			eachPost.PostStatus = param.(map[string]interface{})["post_status"].(string)
