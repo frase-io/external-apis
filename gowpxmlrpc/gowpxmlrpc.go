@@ -1,7 +1,7 @@
 package wordpress
 
 import (
-	"github.com/carthics/go-xmlrpc"
+	"github.com/frase-io/external-apis/go-xmlrpc"
 	"fmt"
 	"reflect"
 	"strconv"
