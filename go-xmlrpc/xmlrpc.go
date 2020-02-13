@@ -2,11 +2,13 @@ package xmlrpc
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/xml"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -22,23 +24,42 @@ func Request(url string, method string, params ...interface{}) ([]interface{}, e
 	request := Serialize(method, params)
 	buffer := bytes.NewBuffer([]byte(request))
 
-	response, err = http.Post(url, "text/xml", buffer)
+	tr := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		Dial: (&net.Dialer{
+			Timeout:   0,
+			KeepAlive: 0,
+		}).Dial,
+		TLSHandshakeTimeout: 10 * time.Second,
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+
+	client := &http.Client{
+		Transport: tr,
+	}
+
+	req, _ := http.NewRequest("POST", url, buffer)
+	req.Header.Set("Connection", "close")
+
+	response, err = client.Do(req)
 	if err != nil {
 		log.Println(err)
 		return unserializedResponse, err
 	}
-	
+
 	if response != nil && response.Body != nil {
 		defer response.Body.Close()
 	}
 
-	unserializedResponse,err = Unserialize(response.Body)
+	unserializedResponse, err = Unserialize(response.Body)
 
-	if err != nil{
+	if err != nil {
 		log.Println(err)
 		return unserializedResponse, err
 	}
-	
+
 	return unserializedResponse, nil
 }
 
@@ -131,7 +152,7 @@ func Serialize(method string, params []interface{}) string {
 	}
 
 	request += "</params></methodCall>"
-	
+
 	return request
 }
 
@@ -150,11 +171,11 @@ func serialize(value interface{}) string {
 			for k, v := range value.(map[string]interface{}) {
 				result += "<member>"
 				result += fmt.Sprintf("<name>%s</name>", k)
-				if strings.EqualFold(k, "bits"){
+				if strings.EqualFold(k, "bits") {
 					result += fmt.Sprintf("<value><base64><![CDATA[---%s---]]></base64></value>", v)
-				}else{
+				} else {
 					result += serialize(v)
-				}				
+				}
 				result += "</member>"
 			}
 			result += "</struct>"
