@@ -41,6 +41,7 @@ func Request(url string, method string, params ...interface{}) ([]interface{}, e
 	}
 
 	req, _ := http.NewRequest("POST", url, buffer)
+	req.Header.Set("Content-Type", "text/xml")
 	req.Header.Set("Connection", "close")
 
 	response, err = client.Do(req)
