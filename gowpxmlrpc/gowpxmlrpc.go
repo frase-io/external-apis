@@ -9,6 +9,7 @@ import (
 	"github.com/frase-io/external-apis/go-xmlrpc"
 )
 
+//BlogAccount is used to hold the User's credentials to the WP Blog
 type BlogAccount struct {
 	Url      string
 	UserName string
@@ -17,11 +18,13 @@ type BlogAccount struct {
 	PostId   string
 }
 
+//Category : contains the list of categories for a blog
 type Category struct {
 	Id   int
 	Name string
 }
 
+//GetCategories : gets the categories for a blog
 func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories []*Category, err error) {
 	response := make([]interface{}, 0)
 	response, err = xmlrpc.Request(ba.Url, "wp.getCategories", ba.BlogId, ba.UserName, ba.PassWord, options)
@@ -52,12 +55,14 @@ func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories 
 	return categories, nil
 }
 
+//Author : author is used to hold the author for a particular post
 type Author struct {
 	Id        string
 	Name      string
 	UserLogin string
 }
 
+//Ggts the list of authors for a blog
 func GetAuthors(ba *BlogAccount, options map[string]interface{}) (authors []*Author, err error) {
 	response := make([]interface{}, 0)
 	response, err = xmlrpc.Request(ba.Url, "wp.getAuthors", ba.BlogId, ba.UserName, ba.PassWord, options)
