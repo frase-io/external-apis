@@ -16,6 +16,7 @@ import (
 	"time"
 )
 
+//Request : Is used to send the HTTP Request to the XMLRPC WP server
 func Request(url string, method string, params ...interface{}) ([]interface{}, error) {
 	unserializedResponse := make([]interface{}, 0)
 	var err error
@@ -36,11 +37,14 @@ func Request(url string, method string, params ...interface{}) ([]interface{}, e
 		},
 	}
 
+	timeout := time.Duration(time.Duration(30) * time.Second)
 	client := &http.Client{
 		Transport: tr,
+		Timeout:   timeout,
 	}
 
 	req, _ := http.NewRequest("POST", url, buffer)
+	req.Header.Set("Content-Type", "text/xml")
 	req.Header.Set("Connection", "close")
 
 	response, err = client.Do(req)
@@ -85,6 +89,7 @@ type Member struct {
 	Value Value  `xml:"value"`
 }
 
+//unserialize : Is used to unserialize the response
 func unserialize(value Value) interface{} {
 	if value.List != nil {
 		result := make([]interface{}, len(value.List))
