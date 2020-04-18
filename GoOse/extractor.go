@@ -55,8 +55,18 @@ func (extr *ContentExtractor) GetTitle(document *goquery.Document) string {
 	title := ""
 
 	titleElement := document.Find("title")
+
 	if titleElement != nil && titleElement.Size() > 0 {
 		title = titleElement.Text()
+		if titleElement.Size() > 1 {
+			titleExists := false
+			document.Find("title").Each(func(i int, s *goquery.Selection) {
+				if !titleExists && len(s.Text()) > 0 {
+					titleExists = true
+					title = s.Text()
+				}
+			})
+		}
 	}
 
 	if title == "" {
