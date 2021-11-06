@@ -84,12 +84,12 @@ func (extr *ContentExtractor) GetTitle(document *goquery.Document) string {
 		title = titleElement.Text()
 	}
 
-	for _, delimiter := range titleDelimiters {
-		if strings.Contains(title, delimiter) {
-			title = extr.splitTitle(strings.Split(title, delimiter))
-			break
-		}
-	}
+	//for _, delimiter := range titleDelimiters {
+	//	if strings.Contains(title, delimiter) {
+	//		title = extr.splitTitle(strings.Split(title, delimiter))
+	//		break
+	//	}
+	//}
 
 	title = strings.Replace(title, motleyReplacement, "", -1)
 
