@@ -1,4 +1,4 @@
-module GoOse
+module github.com/frase-io/external-apis
 
 go 1.17
 
