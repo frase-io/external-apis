@@ -103,7 +103,7 @@ func (c *Crawler) Preprocess() (*goquery.Document, error) {
 	}
 
 	cs := c.GetCharset(document)
-	//log.Println("-------------------------------------------CHARSET:", cs)
+	log.Println("-------------------------------------------CHARSET:", cs)
 	if len(cs) > 0 {
 		cs = strings.Replace(cs, `\"`, `"`, -1)
 	}
