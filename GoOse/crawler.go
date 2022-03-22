@@ -103,7 +103,7 @@ func (c *Crawler) Preprocess() (*goquery.Document, error) {
 	}
 
 	cs := c.GetCharset(document)
-	log.Println("-------------------------------------------CHARSET:", cs)
+	//log.Println("-------------------------------------------CHARSET:", cs)
 
 	if "" != cs && !strings.Contains(cs, "UTF-8") {
 		// the net/html parser and goquery require UTF-8 data
