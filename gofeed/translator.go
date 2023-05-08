@@ -67,6 +67,7 @@ func (t *DefaultRSSTranslator) translateFeedItem(rssItem *rss.Item) (item *Item)
 	item.PublishedParsed = t.translateItemPublishedParsed(rssItem)
 	item.Author = t.translateItemAuthor(rssItem)
 	item.GUID = t.translateItemGUID(rssItem)
+	item.Source = t.translateItemSource(rssItem)
 	item.Image = t.translateItemImage(rssItem)
 	item.Categories = t.translateItemCategories(rssItem)
 	item.Enclosures = t.translateItemEnclosures(rssItem)
@@ -349,6 +350,13 @@ func (t *DefaultRSSTranslator) translateItemAuthor(rssItem *rss.Item) (author *P
 func (t *DefaultRSSTranslator) translateItemGUID(rssItem *rss.Item) (guid string) {
 	if rssItem.GUID != nil {
 		guid = rssItem.GUID.Value
+	}
+	return
+}
+
+func (t *DefaultRSSTranslator) translateItemSource(rssItem *rss.Item) (source string) {
+	if rssItem.Source != nil {
+		source = rssItem.Source.URL
 	}
 	return
 }

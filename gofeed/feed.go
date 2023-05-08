@@ -53,6 +53,7 @@ type Item struct {
 	PublishedParsed *time.Time               `json:"publishedParsed,omitempty"`
 	Author          *Person                  `json:"author,omitempty"`
 	GUID            string                   `json:"guid,omitempty"`
+	Source          string                   `json:"source,omitempty"`
 	Image           *Image                   `json:"image,omitempty"`
 	Categories      []string                 `json:"categories,omitempty"`
 	Enclosures      []*Enclosure             `json:"enclosures,omitempty"`
